@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Audit digital — TP Vauvelle — Vincent Gaboret</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#10110f;--paper:#eeeade;--acid:#d7ff32;--orange:#ff5c35;--violet:#7560ff;--line:#b7b3a8;--muted:#595b55;--green:#63b644}
+@page{size:A4;margin:0}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;background:#777}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.5}
+.page{width:210mm;height:297mm;background:var(--paper);position:relative;overflow:hidden;page-break-after:always;padding:20mm 18mm 22mm;display:flex;flex-direction:column}
+.page:last-child{page-break-after:auto}
+.dark{background:var(--ink);color:#fff}
+.serif{font-family:'Instrument Serif',serif;font-weight:400}
+h1,h2,h3{margin:0;font-weight:400}
+h2{font:44pt/.9 'Instrument Serif';letter-spacing:-.04em;margin:6mm 0 8mm}
+h2 em,h1 em{color:var(--violet)}
+.dark h2 em{color:var(--acid)}
+h3{font:600 12pt 'DM Sans';margin:0 0 2mm}
+p{margin:0 0 3mm}
+.label{font-size:7.5pt;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.muted{color:var(--muted)}
+.dark .muted{color:#a9aaa4}
+/* header / footer */
+.run{position:absolute;left:18mm;right:18mm;bottom:9mm;display:flex;justify-content:space-between;font-size:7pt;letter-spacing:.12em;text-transform:uppercase;color:#6b6e66;border-top:1px solid var(--line);padding-top:3mm}
+.dark .run{border-color:#ffffff22;color:#8b8c86}
+.mono{font-weight:800;letter-spacing:-.08em;font-size:13pt;text-transform:none}
+.mono span{color:var(--orange)}
+/* cover */
+.cover{padding:18mm}
+.cover .top{display:flex;justify-content:space-between;align-items:center;font-size:8pt;letter-spacing:.14em;text-transform:uppercase}
+.cover .mono{font-size:22pt}
+.cover h1{font:84pt/.8 'Instrument Serif';letter-spacing:-.06em;margin-top:auto}
+.cover h1 em{color:var(--acid)}
+.cover .sub{display:flex;justify-content:space-between;align-items:flex-end;margin-top:12mm;gap:10mm}
+.cover .sub p{font-size:13pt;line-height:1.4;max-width:105mm;color:#d6d6cf;margin:0}
+.cover .meta{font-size:8pt;line-height:1.8;text-align:right;color:#a9aaa4;letter-spacing:.06em}
+.cover .meta b{color:#fff;font-weight:600}
+.orbit{position:absolute;border:1px solid #ffffff22;border-radius:50%}
+.kick{display:flex;gap:3mm;align-items:center;margin-top:24mm}
+.kick i{width:2.4mm;height:2.4mm;border-radius:50%;background:var(--orange);box-shadow:0 0 0 1.4mm #ff5c3533}
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.kpis>div{padding:6mm 5mm 6mm 0;border-right:1px solid var(--line);margin-right:5mm}
+.kpis>div:last-child{border:0;margin:0}
+.kpis b{display:block;white-space:nowrap;font:30pt/1 'Instrument Serif';letter-spacing:-.04em}
+.kpis span{font-size:8.5pt;color:var(--muted);display:block;margin-top:2mm}
+.tag{display:inline-block;font-size:7pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:1.2mm 2.2mm;border-radius:1mm}
+.t-crit{background:var(--orange);color:#fff}
+.t-maj{background:var(--ink);color:#fff}
+.t-min{border:1px solid var(--ink)}
+.t-ok{background:var(--acid)}
+.verdict{background:var(--ink);color:#fff;padding:6mm 7mm;margin-top:auto;margin-bottom:6mm;display:grid;grid-template-columns:36mm 1fr;gap:5mm;align-items:center}
+.verdict .big{font:38pt/.8 'Instrument Serif';color:var(--acid)}
+.verdict p{margin:0;color:#d6d6cf}
+.verdict p b{color:#fff}
+/* screenshots */
+.shot{border:1px solid var(--line);background:#fff;overflow:hidden;border-radius:1.5mm;position:relative}
+.shot img{display:block;width:100%}
+.browser{height:6mm;background:#e4e1d6;display:flex;align-items:center;gap:1.4mm;padding:0 3mm;border-bottom:1px solid var(--line);font-size:6.5pt;color:#6b6e66}
+.browser i{width:2mm;height:2mm;border-radius:50%;background:#c9c5b9}
+.browser .url{margin-left:3mm;background:#fff;padding:.6mm 3mm;border-radius:1mm;flex:1}
+.browser .warn{color:#c8341a;font-weight:700}
+.callout{position:absolute;background:var(--orange);color:#fff;font-size:7.5pt;font-weight:700;padding:1.5mm 2.5mm;border-radius:1mm;box-shadow:0 2mm 4mm -2mm #0006}
+.callout::before{content:attr(data-n);display:inline-grid;place-items:center;width:4mm;height:4mm;border-radius:50%;background:#fff;color:var(--orange);margin-right:1.5mm;font-size:6.5pt}
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:8.8pt}
+th{text-align:left;font-size:7pt;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:2.2mm 2mm;border-bottom:1.5px solid var(--ink)}
+td{padding:2.6mm 2mm;border-bottom:1px solid var(--line);vertical-align:top}
+td:first-child,th:first-child{padding-left:0}
+td b{font-weight:700}
+.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.total td{border-top:1.5px solid var(--ink);border-bottom:0;font-weight:700;font-size:10pt}
+/* grid helpers */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8mm}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6mm}
+.card{border-top:1.5px solid var(--ink);padding-top:3mm}
+.card .n{font:26pt/1 'Instrument Serif';color:var(--violet)}
+.dark .card{border-color:#ffffff44}
+.bar{height:4mm;background:#dcd8cb;border-radius:3mm;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--orange)}
+.bar.good i{background:var(--violet)}
+.score{display:grid;grid-template-columns:50mm 1fr 10mm 1fr 10mm;gap:5mm 3mm;align-items:center;font-size:8.8pt}
+.score .h{font-size:7pt;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding-bottom:1mm;border-bottom:1.5px solid var(--ink)}
+.score .v{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.hyp{font-size:7.8pt;color:var(--muted);border-left:2px solid var(--violet);padding-left:3mm;margin-top:4mm}
+.stamp{position:absolute;top:18mm;right:18mm}
+.big-number{font:70pt/.85 'Instrument Serif';letter-spacing:-.05em}
+.acid{background:var(--acid)}
+ul.tick{list-style:none;padding:0;margin:0}
+ul.tick li{padding:1.6mm 0 1.6mm 6mm;position:relative;border-bottom:1px solid var(--line);font-size:9pt}
+ul.tick li::before{content:"↗";position:absolute;left:0;color:var(--violet);font-weight:700}
+.dark ul.tick li{border-color:#ffffff1c}
+.dark ul.tick li::before{color:var(--acid)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.steps>div{border-left:1px solid #ffffff33;padding:0 4mm}.steps p{font-size:8.5pt}
+.steps b{font:24pt/1 'Instrument Serif';color:var(--acid);display:block;margin-bottom:2mm}
+@media screen{.page{margin:10mm auto;box-shadow:0 4mm 12mm #0005}}
+</style>
+</head>
+<body>
+
+<!-- ============ 1. COUVERTURE ============ -->
+<section class="page dark cover">
+  <div class="orbit" style="width:190mm;height:190mm;right:-70mm;top:30mm"></div>
+  <div class="orbit" style="width:130mm;height:130mm;right:-30mm;top:62mm"></div>
+  <div class="top"><span class="mono">VG<span>.</span></span><span>Audit digital · Confidentiel</span></div>
+  <div class="kick label"><i></i>Travaux publics · Varennes-Changy (45)</div>
+  <h1>TP Vauvelle.<br><em>Ce que le site<br>vous coûte.</em></h1>
+  <div class="sub">
+    <p>Diagnostic du site vauvelle.fr, estimation du manque à gagner, et ce qu'une refonte rapporterait.</p>
+    <div class="meta">Préparé pour <b>Cyrille Pietrzak</b><br>Dirigeant, VAUVELLE TP SAS<br><br>Par <b>Vincent Gaboret</b><br>Développeur full-stack<br>Septembre 2026</div>
+  </div>
+</section>
+
+<!-- ============ 2. SYNTHÈSE ============ -->
+<section class="page">
+  <span class="label">01 — Synthèse</span>
+  <h2>Un bon chantier,<br><em>une vitrine en panne.</em></h2>
+  <p style="font-size:12pt;max-width:150mm">TP Vauvelle, c'est 60 ans de métier, 75 collaborateurs, deux centrales d'enrobés et 12,5 M€ de chiffre d'affaires. Le site, lui, raconte l'inverse : <b>aujourd'hui, un visiteur ne voit ni le logo, ni les photos, ni la mise en page</b>, et les chiffres clés affichent «&nbsp;0 M€&nbsp;».</p>
+  <p class="muted" style="max-width:150mm">Cause principale : le certificat de sécurité (HTTPS) n'est pas valide pour vauvelle.fr, et tous les styles, images et scripts du site sont appelés en HTTPS. Le navigateur les bloque. Le site est donc cassé pour 100 % des visiteurs, sur ordinateur comme sur mobile.</p>
+
+  <div class="kpis" style="margin-top:6mm">
+    <div><b style="color:var(--orange)">18<i style="font-style:normal;font-size:16pt">/100</i></b><span>Note globale du site actuel (grille détaillée p. 5)</span></div>
+    <div><b>90 – 270 k€</b><span>Chiffre d'affaires privé estimé perdu chaque année (hypothèses p. 6)</span></div>
+    <div><b style="color:var(--violet)">× 3 à 5</b><span>Demandes de devis entrantes attendues avec le nouveau site</span></div>
+  </div>
+
+  <div class="g3" style="margin-top:7mm">
+    <div class="card"><div class="n">4</div><h3>problèmes critiques</h3><p class="muted">Site non sécurisé, affichage cassé, chiffres à zéro, aucun moyen de demander un devis en ligne.</p></div>
+    <div class="card"><div class="n">6</div><h3>problèmes majeurs</h3><p class="muted">Référencement quasi nul, bibliothèques obsolètes et vulnérables, images très lourdes, pas de recrutement.</p></div>
+    <div class="card"><div class="n">0</div><h3>mesure d'audience</h3><p class="muted">Aucun outil de statistiques : impossible aujourd'hui de savoir combien de clients passent par le site.</p></div>
+  </div>
+
+  <div class="verdict">
+    <div class="big">Verdict</div>
+    <p><b>Le site actuel fait perdre des clients au lieu d'en apporter.</b> Pour les 30 % d'activité privée, il est invisible. Pour les 70 % de marchés publics, il abîme la crédibilité face aux acheteurs et maîtres d'œuvre qui vérifient l'entreprise en ligne. Une refonte est rentabilisée dès les premiers chantiers qu'elle apporte.</p>
+  </div>
+  <div class="run"><span class="mono">VG<span>.</span></span><span>Audit TP Vauvelle · 2</span></div>
+</section>
+
+<!-- ============ 3. CE QUE VOIT UN VISITEUR ============ -->
+<section class="page">
+  <span class="label">02 — Constat</span>
+  <h2>Ce que voit<br><em>un visiteur aujourd'hui.</em></h2>
+  <p class="muted" style="max-width:150mm;margin-bottom:6mm">Capture réalisée le 30 septembre 2026 dans Google Chrome, à l'adresse vauvelle.fr. Aucune manipulation : c'est la page telle qu'elle s'affiche pour un client, un candidat ou un acheteur public.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 46mm;gap:6mm;align-items:start">
+    <div class="shot">
+      <div class="browser"><i></i><i></i><i></i><span class="url"><span class="warn">⚠ Non sécurisé</span> &nbsp;vauvelle.fr</span></div>
+      <img src="img/old-desktop.png" alt="">
+      <span class="callout" data-n="1" style="top:5.5mm;left:26mm">Logo absent</span>
+      <span class="callout" data-n="2" style="top:14.5mm;left:18mm">Photos du diaporama non chargées</span>
+      <span class="callout" data-n="3" style="top:45mm;left:14mm">«&nbsp;0 M€&nbsp;» de chiffre d'affaires</span>
+      <span class="callout" data-n="4" style="top:34mm;left:78mm">Aucune mise en page</span>
+    </div>
+    <div class="shot">
+      <div class="browser"><i></i><span class="url" style="margin-left:1mm">vauvelle.fr</span></div>
+      <img src="img/old-mobile.png" alt="">
+    </div>
+  </div>
+
+  <div class="g2" style="margin-top:8mm">
+    <div>
+      <h3>Pourquoi c'est cassé</h3>
+      <p class="muted">Le serveur présente un certificat émis pour «&nbsp;cluster130.hosting.ovh.net&nbsp;», pas pour vauvelle.fr. En HTTPS, le navigateur affiche «&nbsp;Votre connexion n'est pas privée&nbsp;». En HTTP, la page s'ouvre, mais toutes ses feuilles de style, scripts et images sont appelés en HTTPS : ils sont refusés.</p>
+    </div>
+    <div>
+      <h3>Ce que ça provoque</h3>
+      <p class="muted">Un particulier qui cherche «&nbsp;terrassement Loiret&nbsp;» et tombe sur cette page repart en quelques secondes. Un maître d'œuvre qui vérifie l'entreprise avant une consultation lit «&nbsp;0 collaborateur&nbsp;» et un site qui semble abandonné. Google, de son côté, pénalise les sites non sécurisés.</p>
+    </div>
+  </div>
+  <div class="run"><span class="mono">VG<span>.</span></span><span>Audit TP Vauvelle · 3</span></div>
+</section>
+
+<!-- ============ 4. DIAGNOSTIC ============ -->
+<section class="page">
+  <span class="label">03 — Diagnostic technique</span>
+  <h2>13 problèmes,<br><em>classés par gravité.</em></h2>
+  <table>
+    <thead><tr><th style="width:21mm">Gravité</th><th>Constat</th><th style="width:62mm">Conséquence</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag t-crit">Critique</span></td><td><b>Certificat HTTPS invalide</b> pour vauvelle.fr et www.vauvelle.fr</td><td class="muted">Alerte de sécurité, perte de confiance, pénalité Google</td></tr>
+      <tr><td><span class="tag t-crit">Critique</span></td><td><b>Styles, images et scripts bloqués</b> : tous appelés en HTTPS</td><td class="muted">Site affiché brut, sans logo ni photo</td></tr>
+      <tr><td><span class="tag t-crit">Critique</span></td><td><b>Chiffres clés à «&nbsp;0&nbsp;»</b> : les compteurs ne s'animent qu'au défilement, via un script bloqué</td><td class="muted">L'entreprise paraît vide ou fermée</td></tr>
+      <tr><td><span class="tag t-crit">Critique</span></td><td><b>Aucun formulaire de devis</b>, coordonnées reléguées en pied de page</td><td class="muted">Les demandes hors heures de bureau sont perdues</td></tr>
+      <tr><td><span class="tag t-maj">Majeur</span></td><td><b>Même titre sur les 9 pages</b>, aucune meta description</td><td class="muted">Google ne sait pas quelle page proposer</td></tr>
+      <tr><td><span class="tag t-maj">Majeur</span></td><td><b>Ni sitemap.xml ni robots.txt</b> (erreurs 404)</td><td class="muted">Indexation lente et incomplète</td></tr>
+      <tr><td><span class="tag t-maj">Majeur</span></td><td><b>jQuery 3.3.1 (2018)</b>, failles connues CVE-2019-11358 et CVE-2020-11022/11023</td><td class="muted">Surface d'attaque inutile</td></tr>
+      <tr><td><span class="tag t-maj">Majeur</span></td><td><b>Images non optimisées</b> : jusqu'à 4 128 px et 780 Ko pour une vignette</td><td class="muted">Pages lentes en 4G sur chantier</td></tr>
+      <tr><td><span class="tag t-maj">Majeur</span></td><td><b>Aucune statistique de visite</b> (ni Analytics, ni Matomo, ni Search Console détectés)</td><td class="muted">Impossible de piloter ou de mesurer</td></tr>
+      <tr><td><span class="tag t-maj">Majeur</span></td><td><b>Pas de page recrutement</b> alors que le secteur TP manque de bras</td><td class="muted">Candidats orientés vers les concurrents</td></tr>
+      <tr><td><span class="tag t-min">Mineur</span></td><td><b>Contenus datés ou incohérents</b> : «&nbsp;près de 55 ans&nbsp;» puis «&nbsp;près de 50 ans&nbsp;», © 2021, CA 2021-2022</td><td class="muted">Image d'un site non entretenu</td></tr>
+      <tr><td><span class="tag t-min">Mineur</span></td><td><b>Coquilles et anglais</b> : «&nbsp;View more&nbsp;», «&nbsp;éléctriques&nbsp;», «&nbsp;réhabilation&nbsp;», «&nbsp;des ses clients&nbsp;»</td><td class="muted">Manque de sérieux perçu</td></tr>
+      <tr><td><span class="tag t-min">Mineur</span></td><td><b>Structure HTML fragile</b> : 3 titres H1 sur l'accueil, un H1 fermé par un H6, images nommées «&nbsp;image1&nbsp;»</td><td class="muted">Accessibilité et SEO dégradés</td></tr>
+    </tbody>
+  </table>
+  <div class="run"><span class="mono">VG<span>.</span></span><span>Audit TP Vauvelle · 4</span></div>
+</section>
+
+<!-- ============ 5. SCORE ============ -->
+<section class="page">
+  <span class="label">04 — Évaluation</span>
+  <h2>Avant, après :<br><em>la note par critère.</em></h2>
+  <p class="muted" style="max-width:150mm;margin-bottom:8mm">Chaque critère est noté sur 100 selon la grille d'audit VG : sécurité, affichage réel, mobile, référencement local, capacité à générer des demandes, qualité des contenus et vitesse. La note «&nbsp;nouveau site&nbsp;» correspond à la maquette livrée avec ce document.</p>
+
+  <div class="score">
+    <div class="h">Critère</div><div class="h" style="grid-column:span 2">Site actuel</div><div class="h" style="grid-column:span 2">Nouveau site</div>
+    <div>Sécurité (HTTPS, dépendances)</div><div class="bar"><i style="width:5%"></i></div><div class="v">5</div><div class="bar good"><i style="width:95%"></i></div><div class="v">95</div>
+    <div>Affichage réel</div><div class="bar"><i style="width:5%"></i></div><div class="v">5</div><div class="bar good"><i style="width:95%"></i></div><div class="v">95</div>
+    <div>Expérience mobile</div><div class="bar"><i style="width:15%"></i></div><div class="v">15</div><div class="bar good"><i style="width:92%"></i></div><div class="v">92</div>
+    <div>Référencement local</div><div class="bar"><i style="width:15%"></i></div><div class="v">15</div><div class="bar good"><i style="width:85%"></i></div><div class="v">85</div>
+    <div>Génération de demandes</div><div class="bar"><i style="width:10%"></i></div><div class="v">10</div><div class="bar good"><i style="width:90%"></i></div><div class="v">90</div>
+    <div>Contenus et crédibilité</div><div class="bar"><i style="width:45%"></i></div><div class="v">45</div><div class="bar good"><i style="width:88%"></i></div><div class="v">88</div>
+    <div>Vitesse de chargement</div><div class="bar"><i style="width:30%"></i></div><div class="v">30</div><div class="bar good"><i style="width:90%"></i></div><div class="v">90</div>
+  </div>
+
+  <div class="g2" style="margin-top:auto;align-items:end">
+    <div>
+      <span class="label">Note globale actuelle</span>
+      <div class="big-number" style="color:var(--orange)">18</div>
+    </div>
+    <div>
+      <span class="label">Note visée</span>
+      <div class="big-number" style="color:var(--violet)">91</div>
+    </div>
+  </div>
+  <p class="muted" style="margin-top:6mm">Le point fort du site actuel, ce sont ses contenus : descriptions des métiers, matériel, politique environnement et sécurité, galeries photo. Ils ont été entièrement repris et mis en valeur dans la nouvelle version.</p>
+  <div class="run"><span class="mono">VG<span>.</span></span><span>Audit TP Vauvelle · 5</span></div>
+</section>
+
+<!-- ============ 6. COÛT ============ -->
+<section class="page">
+  <span class="label">05 — Manque à gagner</span>
+  <h2>Ce que l'ancien site<br><em>coûte chaque année.</em></h2>
+  <p class="muted" style="max-width:155mm;margin-bottom:6mm">L'activité privée représente environ 30 % du chiffre d'affaires, soit près de 3,75 M€ : particuliers, industriels, agriculteurs, promoteurs. C'est sur ce segment que le site devrait apporter des demandes. Deux scénarios, volontairement prudents.</p>
+
+  <table>
+    <thead><tr><th>Étape du calcul</th><th class="num">Prudent</th><th class="num">Médian</th></tr></thead>
+    <tbody>
+      <tr><td>Recherches Google mensuelles sur les métiers du TP dans le 45, le 77 et le 89</td><td class="num">1 500</td><td class="num">2 000</td></tr>
+      <tr><td>Part captée par un site bien positionné (top 3 local)</td><td class="num">8 %</td><td class="num">10 %</td></tr>
+      <tr><td>Visites qualifiées par mois</td><td class="num">120</td><td class="num">200</td></tr>
+      <tr><td>Taux de demande de devis (formulaire ou appel)</td><td class="num">2 %</td><td class="num">3 %</td></tr>
+      <tr><td>Demandes de devis par an</td><td class="num">29</td><td class="num">72</td></tr>
+      <tr><td>Taux de signature</td><td class="num">20 %</td><td class="num">25 %</td></tr>
+      <tr><td>Chantiers signés par an</td><td class="num">6</td><td class="num">18</td></tr>
+      <tr><td>Montant moyen d'un chantier privé (HT)</td><td class="num">15 k€</td><td class="num">15 k€</td></tr>
+      <tr class="total"><td>Chiffre d'affaires privé manqué par an</td><td class="num" style="color:var(--orange)">≈ 90 k€</td><td class="num" style="color:var(--orange)">≈ 270 k€</td></tr>
+      <tr><td>Marge brute associée (hypothèse 25 %)</td><td class="num">≈ 22 k€</td><td class="num">≈ 68 k€</td></tr>
+    </tbody>
+  </table>
+
+  <div class="g3" style="margin-top:8mm">
+    <div class="card"><h3>Recrutement</h3><p class="muted">Sans page carrière, chaque poste passe par annonces payantes ou intérim. Deux recrutements par an via le site, c'est environ <b style="color:var(--ink)">8 k€ économisés</b>.</p></div>
+    <div class="card"><h3>Marchés publics</h3><p class="muted">70 % de l'activité. Non chiffré ici, mais un site cassé est un signal négatif lors des consultations et des visites de références.</p></div>
+    <div class="card"><h3>Temps perdu</h3><p class="muted">Sans formulaire structuré, l'accueil traite par téléphone des demandes incomplètes qu'il faut ensuite requalifier.</p></div>
+  </div>
+
+  <p class="hyp"><b>Hypothèses à confirmer.</b> Les volumes de recherche sont des ordres de grandeur pour un bassin rural de ce type ; ils seront mesurés précisément avec Google Search Console et l'outil de planification de mots-clés dès la mise en ligne. Le montant moyen et le taux de signature sont à ajuster avec les chiffres réels de l'entreprise.</p>
+  <div class="run"><span class="mono">VG<span>.</span></span><span>Audit TP Vauvelle · 6</span></div>
+</section>
+
+<!-- ============ 7. NOUVEAU SITE ============ -->
+<section class="page dark">
+  <span class="label" style="color:var(--acid)">06 — La proposition</span>
+  <h2>Le nouveau site,<br><em>déjà prêt.</em></h2>
+  <div class="shot" style="border-color:#ffffff22"><img src="img/new-desktop.png" alt=""></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:5mm">
+    <div class="shot" style="border-color:#ffffff22"><img src="img/new-realisations.png" alt=""></div>
+    <div class="shot" style="border-color:#ffffff22"><img src="img/new-devis.png" alt=""></div>
+  </div>
+  <div class="g3" style="margin-top:7mm">
+    <div class="card"><h3>Une identité TP</h3><p class="muted">Le turquoise des engins Vauvelle, le noir du bitume, le jaune de chantier. Des titres forts, des vraies photos de chantier.</p></div>
+    <div class="card"><h3>Pensé pour convertir</h3><p class="muted">Devis en 30 secondes, téléphone toujours visible, bouton d'appel flottant sur mobile, formulaire qualifié par profil et métier.</p></div>
+    <div class="card"><h3>Rapide et sûr</h3><p class="muted">Zéro dépendance lourde, images WebP (près de 40 % plus légères), HTTPS, données structurées pour Google.</p></div>
+  </div>
+  <div class="run"><span class="mono">VG<span>.</span></span><span>Audit TP Vauvelle · 7</span></div>
+</section>
+
+<!-- ============ 8. MOBILE + APPORTS ============ -->
+<section class="page">
+  <span class="label">07 — Ce que ça change</span>
+  <h2>Sur le téléphone<br><em>d'un client.</em></h2>
+  <img src="img/new-mobiles.png" alt="" style="width:92%;margin:0 auto;border-radius:1.5mm">
+  <table style="margin-top:5mm;font-size:8.5pt">
+    <thead><tr><th>Sujet</th><th>Site actuel</th><th>Nouveau site</th></tr></thead>
+    <tbody>
+      <tr><td><b>Sécurité</b></td><td class="muted">Alerte «&nbsp;non sécurisé&nbsp;»</td><td>HTTPS valide, aucune bibliothèque vulnérable</td></tr>
+      <tr><td><b>Demande de devis</b></td><td class="muted">Numéro en pied de page</td><td>Formulaire qualifié + appel en un geste sur mobile</td></tr>
+      <tr><td><b>Google</b></td><td class="muted">1 titre pour 9 pages, pas de sitemap</td><td>Titres ciblés, fiche entreprise structurée (schema.org), zone d'intervention</td></tr>
+      <tr><td><b>Réalisations</b></td><td class="muted">Photos non chargées</td><td>Galerie filtrable par métier, agrandissement plein écran</td></tr>
+      <tr><td><b>Recrutement</b></td><td class="muted">Absent</td><td>Postes ouverts, alternance, candidature directe</td></tr>
+      <tr><td><b>Chiffres clés</b></td><td class="muted">«&nbsp;0 M€&nbsp;», «&nbsp;0 collaborateur&nbsp;»</td><td>60 ans, 75 collaborateurs, 12,5 M€, 70 % de marchés publics</td></tr>
+      <tr><td><b>Pilotage</b></td><td class="muted">Aucune donnée</td><td>Suivi des visites et des demandes, rapport mensuel</td></tr>
+    </tbody>
+  </table>
+  <div class="run"><span class="mono">VG<span>.</span></span><span>Audit TP Vauvelle · 8</span></div>
+</section>
+
+<!-- ============ 9. GAINS + PLAN ============ -->
+<section class="page dark">
+  <span class="label" style="color:var(--acid)">08 — Retour sur investissement</span>
+  <h2>Ce que le nouveau site<br><em>rapporterait.</em></h2>
+
+  <div class="kpis" style="border-color:#ffffff33">
+    <div style="border-color:#ffffff33"><b style="color:var(--acid)">+90 à 270 k€</b><span class="muted">de chiffre d'affaires privé par an, dès que le référencement est installé (6 à 12 mois)</span></div>
+    <div style="border-color:#ffffff33"><b>30 – 70</b><span class="muted">demandes de devis qualifiées par an, contre quasiment aucune aujourd'hui</span></div>
+    <div><b>1 chantier</b><span class="muted">signé grâce au site suffit à couvrir l'investissement de la refonte</span></div>
+  </div>
+
+  <div class="g2" style="margin-top:7mm">
+    <div>
+      <h3 style="color:var(--acid)">Gains directs</h3>
+      <ul class="tick">
+        <li>Nouveaux chantiers privés : particuliers, agriculteurs, industriels</li>
+        <li>Demandes reçues le soir et le week-end, plus aucune perdue</li>
+        <li>Candidatures spontanées et alternants</li>
+        <li>Moins de temps passé à requalifier les demandes au téléphone</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:var(--acid)">Gains d'image</h3>
+      <ul class="tick">
+        <li>Crédibilité renforcée face aux acheteurs publics</li>
+        <li>Certifications CE et label AQP enfin mises en avant</li>
+        <li>Une identité qui assume la reprise de 2023 et la modernisation</li>
+        <li>Un outil fier à montrer aux équipes et aux partenaires</li>
+      </ul>
+    </div>
+  </div>
+
+  <span class="label" style="margin-top:8mm;display:block;color:#a9aaa4">Plan de mise en ligne</span>
+  <div class="steps" style="margin-top:5mm">
+    <div><b>01</b><h3>Semaine 1</h3><p class="muted">Validation de la maquette, des chiffres et des textes avec la direction.</p></div>
+    <div><b>02</b><h3>Semaine 2</h3><p class="muted">Photos récentes, fiches réalisations avec lieu et client, offres d'emploi réelles.</p></div>
+    <div><b>03</b><h3>Semaine 3</h3><p class="muted">Mise en ligne, certificat HTTPS, redirections des anciennes pages, Search Console.</p></div>
+    <div><b>04</b><h3>Mois 2 à 12</h3><p class="muted">Fiche Google Business, suivi des demandes, rapport mensuel et ajustements.</p></div>
+  </div>
+
+  <div style="margin-top:auto;margin-bottom:6mm;display:flex;justify-content:space-between;align-items:flex-end;gap:10mm">
+    <h2 style="font-size:30pt;margin:0">Faisons quelque chose<br><em>qui compte.</em></h2>
+    <div style="text-align:right;font-size:9pt;line-height:1.8;color:#c7c7bf">Vincent Gaboret<br>vincentgaboret.fr<br>linkedin.com/in/vincent-gaboret</div>
+  </div>
+  <div class="run"><span class="mono">VG<span>.</span></span><span>Audit TP Vauvelle · 9</span></div>
+</section>
+
+</body>
+</html>
